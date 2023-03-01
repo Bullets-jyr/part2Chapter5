@@ -32,14 +32,61 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         newsAdapter = NewsAdapter()
+        val newsService = retrofit.create(NewsService::class.java)
 
         binding.newRecyclerView.apply {
             layoutManager = LinearLayoutManager(this@MainActivity)
             adapter = newsAdapter
         }
 
-        val newsService = retrofit.create(NewsService::class.java)
-        newsService.mainFeed().enqueue(object : Callback<NewsRss> {
+        binding.feedChip.setOnClickListener {
+            binding.chipGroup.clearCheck()
+            binding.feedChip.isChecked = true
+
+            newsService.mainFeed().submitList()
+        }
+
+        binding.politicsChip.setOnClickListener {
+            binding.chipGroup.clearCheck()
+            binding.politicsChip.isChecked = true
+
+            newsService.politicsNews().submitList()
+        }
+
+        binding.economyChip.setOnClickListener {
+            binding.chipGroup.clearCheck()
+            binding.economyChip.isChecked = true
+
+            newsService.economyNews().submitList()
+        }
+
+        binding.societyChip.setOnClickListener {
+            binding.chipGroup.clearCheck()
+            binding.societyChip.isChecked = true
+
+            newsService.societyNews().submitList()
+        }
+
+        binding.itChip.setOnClickListener {
+            binding.chipGroup.clearCheck()
+            binding.itChip.isChecked = true
+
+            newsService.itNews().submitList()
+        }
+
+        binding.sportsChip.setOnClickListener {
+            binding.chipGroup.clearCheck()
+            binding.sportsChip.isChecked = true
+
+            newsService.sportsNews().submitList()
+        }
+
+        binding.feedChip.isChecked = true
+        newsService.mainFeed().submitList()
+    }
+
+    private fun Call<NewsRss>.submitList() {
+        enqueue(object : Callback<NewsRss> {
             override fun onResponse(call: Call<NewsRss>, response: Response<NewsRss>) {
                 Log.e("MainActivity", "${response.body()?.channel?.item}")
 
@@ -55,7 +102,7 @@ class MainActivity : AppCompatActivity() {
                                 node.attr("property") == "og:image"
                             }
 
-        //                    val imageUrl = ogImageNode?.attr("content")
+                            //                    val imageUrl = ogImageNode?.attr("content")
 
                             newsModel.imageUrl = ogImageNode?.attr("content")
 
