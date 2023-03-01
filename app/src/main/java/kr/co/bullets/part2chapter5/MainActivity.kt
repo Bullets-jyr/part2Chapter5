@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.tickaroo.tikxml.TikXml
 import com.tickaroo.tikxml.retrofit.TikXmlConverterFactory
@@ -117,6 +118,9 @@ class MainActivity : AppCompatActivity() {
 
                 val list = response.body()?.channel?.item.orEmpty().transform()
                 newsAdapter.submitList(list)
+
+                binding.notFoundView.isVisible = list.isEmpty()
+
                 list.forEachIndexed { index, newsModel ->
                     Thread {
 //                        val item = list.first()
